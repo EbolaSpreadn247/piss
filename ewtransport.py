@@ -95,6 +95,10 @@ class EwTransport:
 			if district_data.is_degraded():
 				return
 
+                        if (district_data.slimes() < 5000):
+                                return
+                        district_data.change_slimes(n = 5000)
+			district_data.persist()
 			transport_line = ewcfg.id_to_transport_line[self.current_line]
 			client = ewutils.get_client()
 			resp_cont = ewutils.EwResponseContainer(client = client, id_server = self.id_server)
@@ -131,7 +135,11 @@ class EwTransport:
 				if stop_data.id_poi == transport_line.last_stop:
 					next_line = ewcfg.id_to_transport_line[transport_line.next_line]
 					response += " This {} will proceed on {}.".format(self.transport_type, next_line.str_name.replace("The", "the"))
-				else:
+				
+                                        if (district_data.slimes() < 5000):
+                                                response = response.replace("will","would")
+                                                response += " Alas, the tracks here are too dry to run, slime must be dispersed over the district."
+                                else:
 					next_stop = ewcfg.id_to_poi.get(transport_line.schedule.get(stop_data.id_poi)[1])
 					if next_stop.is_transport_stop:
 						# if next_stop.is_subzone:
@@ -139,10 +147,19 @@ class EwTransport:
 						# 	response += " The next stop is {}.".format(stop_mother.str_name)
 						# else:
 						response += " The next stop is {}.".format(next_stop.str_name)
+                                                if (district_data.slimes() < 5000):
+                                                         response = response.replace("is","would be")
+                                                         response += " Alas, the tracks here are too dry to run, slime must be dispersed over the district."
+
+
 				resp_cont.add_channel_response(poi_data.channel, response)
 
 				# announce transport has arrived at the stop
 				if stop_data.is_transport_stop:
+                                        if (district_data.slimes() < 5000):
+                                              response = "{} has screeched to a halt. It is dry, and the district requires more slime to seap onto the tracks for it to operate.".format(next_line.str_name)
+                                        else:
+                                              response = "{} has arrived. You may board now.".format(next_line.str_name)
 					response = "{} has arrived. You may board now.".format(next_line.str_name)
 					resp_cont.add_channel_response(stop_data.channel, response)
 				elif self.transport_type == ewcfg.transport_type_ferry:
