@@ -1566,16 +1566,41 @@ async def piss(cmd):
 	mutations = user_data.get_mutations()
 
 	if ewcfg.mutation_id_enlargedbladder in mutations:
+                response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment"
+		piss_events = random.randint(1,10000)
+                if piss_events < 101: #1 in 100 chance to dye slimeoid using piss
+			slimeoid = EwSlimeoid(member = cmd.message.author)
+			if slimeoid.life_state == ewcfg.slimeoid_state_active:
+				hue = ewcfg.hue_map.get("yellow")
+				response += ", and the catharsis makes your mind, and stained fingertips, slip. CONGRATULATIONS. You suddenly lose control of your HUGE GENITAL as it flails wildly about from the force of the torrent. You saturate your {} with your PISS. {}".format(slimeoid.name, hue.str_saturate)
+				slimeoid.hue = (ewcfg.hue_map.get("yellow")).id_hue
+				slimeoid.persist()
+			        #return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                        else:
+                                response += "." #punctuation to account for kidney stone. they got the event but dont have a slimeoid
+                        
+                if (piss_events > 99) and (piss_events < 110): #1 in 1000 chance of kidney stone. 1 in 100000 chance of both dying a sliemoid and kidney stone
+                        kidneystone_data = next(i for i in ewcfg.item_list if i.id_item == ewcfg.item_id_kidneystone)
+		        ewitem.item_create(
+                                item_type = ewcfg.it_item,
+			        id_user = user_data.id_user,
+			        id_server = cmd.guild.id,
+			        item_props={
+				        'id_item': kidneystone_data.id_item,
+				        'item_name': kidneystone_data.str_name,
+				        'item_desc': kidneystone_data.str_desc,
+                                        'original_user': id_user, #this is supposed to be the person's id permanently associated to the item. 
+			        }                                 #the reason for this is to let ghosts with this kidney stone to haunt its associated person
+		        )                                         #in a funny unique way, aka: makin em piss themself too.
+                        response += " But as the tip of your genital drips its final drops, you begin to feel uneasy. An INTENSE SHOCKING PAIN spawns into your very soul and from it your body shakes you in an anticipation. The dam cracks, your sense of security forever gone with it as you collapse onto a small twinkling stone. Unknowingly to yourself, your slime slings down and absorbs the KIDNEY STONE into your inventory."
+                        
+                if piss_events < 110:
+                         #user_data.change_slimes(n = -ewcfg.slimes_to_crystalize_negapoudrin, source = ewcfg.source_spending)
+		         #user_data.persist()
+                         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		if cmd.mentions_count == 0:
 			response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
-			if random.randint(1,100) < 2:
-				slimeoid = EwSlimeoid(member = cmd.message.author)
-				if slimeoid.life_state == ewcfg.slimeoid_state_active:
-					hue = ewcfg.hue_map.get("yellow")
-					response = "CONGRATULATIONS. You suddenly lose control of your HUGE COCK and saturate your {} with your PISS. {}".format(slimeoid.name, hue.str_saturate)
-					slimeoid.hue = (ewcfg.hue_map.get("yellow")).id_hue
-					slimeoid.persist()
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			
 
 		if cmd.mentions_count == 1:
 			target_member = cmd.mentions[0]
