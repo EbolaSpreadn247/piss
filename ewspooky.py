@@ -226,14 +226,21 @@ async def haunt(cmd):
 					haunt_power_multiplier *= 1.5 # wet hands
 
                                 #channel item
+                                channel_response = ""
                                 if cmd.tokens_count > 2:
                                         item_search = ewutils.flattenTokenListToString(cmd.tokens[2:])
                                         item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 				        if item_sought != None:
-                                                value = item_sought.get('name')
-                                                channel_power = ewcfg.item_hauntpower(value)
-                                                haunt_power_multiplier *= channel_power
-                                # misc
+                                                #item_name = item_sought.get('name')
+                                                #dont know where to or how to implement this except if statements for each one. In which case, the .find_item was a waste of time.
+                                                if (item_sought.item_name == "kidneystone") and (item_sought.original_user == haunted_data.id_user):
+                                                         channel_power = ewcfg.item_hauntpower(item_sought.item_name)
+                                                         haunt_power_multiplier *= channel_power
+                                                         channel_response = " Everyone is staring at you and you look downwards to find that you haved pissed yourself, thoroughly. Experienced in cowardly secreations, you dont think fear is the reason this time -you sense part of your body outside of itself."
+                                                else: 
+                                                         response = "Thats not their kidney stone, you dumb ghast. Re-examine its ~spiritual~ residue and try again." #there is no way to do that except to remember whos kidney stone u got.
+                                                         await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+                                # misc                   
 				if ewcfg.weather_map.get(market_data.weather) == ewcfg.weather_foggy:
 					haunt_power_multiplier *= 1.1
 				if not haunted_data.has_soul:
@@ -293,7 +300,7 @@ async def haunt(cmd):
 			response = "Your spookiness is appreciated, but ENDLESS WAR didn\'t understand that name."
 
 	# Send the response to the player.
-	resp_cont.add_channel_response(cmd.message.channel.name, response)
+	resp_cont.add_channel_response(cmd.message.channel.name, response+channel_response)
 	await resp_cont.post()
 	#await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
