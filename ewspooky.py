@@ -225,7 +225,15 @@ async def haunt(cmd):
 				if time_now - haunted_data.time_lastkill < (60 * 15):
 					haunt_power_multiplier *= 1.5 # wet hands
 
-				# misc
+                                #channel item
+                                if cmd.tokens_count > 2:
+                                        item_search = ewutils.flattenTokenListToString(cmd.tokens[2:])
+                                        item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
+				        if item_sought != None:
+                                                value = item_sought
+                                                channel_power = ewcfg.item_hauntpower(value)
+                                                haunt_power_multiplier *= channel_power
+                                # misc
 				if ewcfg.weather_map.get(market_data.weather) == ewcfg.weather_foggy:
 					haunt_power_multiplier *= 1.1
 				if not haunted_data.has_soul:
