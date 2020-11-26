@@ -230,7 +230,7 @@ async def haunt(cmd):
                                         item_search = ewutils.flattenTokenListToString(cmd.tokens[2:])
                                         item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.guild.id if cmd.guild is not None else None, item_type_filter = ewcfg.it_item)
 				        if item_sought != None:
-                                                value = item_sought
+                                                value = item_sought.get('name')
                                                 channel_power = ewcfg.item_hauntpower(value)
                                                 haunt_power_multiplier *= channel_power
                                 # misc
